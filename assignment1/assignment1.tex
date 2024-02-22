@@ -18,6 +18,10 @@
 
 \newpage
 
+\tableofcontents
+
+\newpage
+
 \section{Specs of The Machine}
 
 The machine we are going to run tests on in this experiment is the Macbook Pro with the Apple M1 Pro chip.
@@ -144,8 +148,35 @@ The first panel, Will it Work?, is starightforward. It shows a checkmark if your
 
 But for the second panel, How Fast?, it might not be so clear at first. It tells how many frames of a video you can read per second from your disk. If you are editing a video that is 8K at 60fps but your disk can't keep up and maxes out its read of fps at 50, you will get a choppy playback. Also you will struggle to run more than one 8K video simultaneously. Now if you got frames per second that are way more than one video frames per second, then you are good to go. For example, the Macbook I ran the tests on can read 5126 frames per second of (4320 8K video) in the (H.265) format. That should be enough for almost every use case possible with this machine.
 
-\section{Analysis Tool}
+\section{Analysis Tool (TG Pro)}
 
-TG Pro is a great companion for monitoring the heat of different components of your Macbook. The menu bar icon shows the 
+TG Pro is a great companion for monitoring the heat of different components of your Macbook. The menu bar icon shows three customizable pieces of information.
+ 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/tgpro-menu-bar.png}
+    \caption{TG Pro Menu Bar Icon}
+    \label{fig:tgpro-menu-bar}
+\end{figure}
+
+They are show in \textbf{Figure \ref{fig:tgpro-menu-bar}}:
+\begin{enumerate}
+    \item \textbf{Top Row Left:} Highest temperature of any sensor in the Macbook.
+    \item \textbf{Top Row Right:} Highest CPU core temperature.
+    \item \textbf{Bottom Row:} Average fan speed. (RPM stands for Revolutions Per Minute)
+\end{enumerate}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.5\textwidth]{images/tgpro-interface.png}
+    \caption{TG Pro Sensors Window}
+    \label{fig:tgpro-sensors}
+\end{figure}
+
+The app also has a window, as shown in \textbf{Figure \ref{fig:tgpro-sensors}} that shows all the sensors and their temperatures. It also shows the fan speed.
+
+\section{Conclusion}
+
+The Apple M1 Pro chip is a very powerful chip. It has a very high single-core score and a very high multi-core score. The GPU also performs very well in both Metal and OpenCL tests. The disk speed is also very high and can handle 8K video editing with ease. The machine also stays cool under pressure and the fans are very quiet. I often find myself checking the TG Pro app to see if the fans are even running. And I even sometime turn them on manully just to make sure they still work. The machine is also very power efficient and can last a long time on battery. 
 
 \end{document}
