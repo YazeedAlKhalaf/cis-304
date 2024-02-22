@@ -44,32 +44,61 @@ More details can be found on the Apple website: \url{https://support.apple.com/k
 
 In this section, we will be examining the results of the benchamrking tools that stress both the CPU and the GPU.
 
-\subsection{Geekbench (CPU and GPU)}
+\subsection{Geekbench (CPU)}
 
-some text
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/geekbench-single-multi-core.png}
+    \caption{Geekbench CPU Single and Multi Core Test Results}
+    \label{fig:geekbench-single-multi-core}
+\end{figure}
 
-some text
+The CPU stress test benchmarks the Apple M1 Pro chip. The results are shown in \textbf{Figure \ref{fig:geekbench-single-multi-core}} and are as follows:
 
-some text
+\begin{itemize}
+    \item \textbf{Single-Core Score:} 2242
+    \item \textbf{Multi-Core Score:} 9750
+\end{itemize}
 
-some text
+\subsection{Geekbench (GPU)}
 
-some text
+The GPU stress test performed by Geekbench on macOS supports two GPU APIs: Metal and OpenCL. We will be examining the results of both.
 
-some text
+The results of this test on Geekbench: \url{https://browser.geekbench.com/v6/cpu/5025983}
 
-some text
+\subsubsection{Metal}
 
-some text
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/geekbench-gpu-metal.png}
+    \caption{Geekbench GPU Metal Test Results}
+    \label{fig:geekbench-gpu-metal}
+\end{figure}
 
-some text
+The GPU stress test benchmarks the Apple M1 Pro chip. The results are shown in \textbf{Figure \ref{fig:geekbench-gpu-metal}} and are as follows:
 
-some text
+\begin{itemize}
+    \item \textbf{Metal Score:} 67757
+\end{itemize}
 
-some text
+The results of this test on Geekbench: \url{https://browser.geekbench.com/v6/compute/1805495}
 
-some text
+\subsubsection{OpenCL}
 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{images/geekbench-gpu-opencl.png}
+    \caption{Geekbench GPU OpenCL Test Results}
+    \label{fig:geekbench-gpu-opencl}
+\end{figure}
+
+The GPU stress test benchmarks the Apple M1 Pro chip. The results are shown in \textbf{Figure \ref{fig:geekbench-gpu-opencl}} and are as follows:
+
+\begin{itemize}
+    \item \textbf{OpenCL Score:} 36289
+\end{itemize}
+
+The results of this test on Geekbench: \url{https://browser.geekbench.com/v6/compute/1805535}
 
 \subsection{Blackmagic Disk Speed Test}
 
@@ -117,6 +146,6 @@ But for the second panel, How Fast?, it might not be so clear at first. It tells
 
 \section{Analysis Tool}
 
-some text
+TG Pro is a great companion for monitoring the heat of different components of your Macbook. The menu bar icon shows the 
 
 \end{document}
