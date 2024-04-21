@@ -1,0 +1,56 @@
+\documentclass[a4paper]{article}
+\usepackage{graphicx}
+\usepackage{xcolor} % Load this before hyperref
+\definecolor{softblue}{RGB}{70,130,180}
+\usepackage[colorlinks=true, linkcolor=softblue, citecolor=softblue, filecolor=softblue, urlcolor=softblue]{hyperref}
+\usepackage{enumitem}
+
+
+\title{\textbf{Assignment 2:\\Computer Architecture}}
+\author{
+    Yazeed AlKhalaf\\
+    \\
+    \textbf{Course:} CIS 304 - Computer Architecture\\
+    \textbf{Instructor:} Dr. Adeel Baig
+}
+\date{\textbf{Date:} 21 Apr, 2024}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+
+\tableofcontents
+
+\newpage
+
+\section{Question 1:}
+
+A cache consists of 128 lines. The main memory contains 8192 blocks of 256
+words each. Design the address format if the cache is
+
+\begin{enumerate}[label=(\alph*)]
+    \item Direct Mapped
+    \item Associative Mapped
+    \item Set Associative with four-line per sets
+\end{enumerate}
+
+\subsection{Part A: Direct Mapped}
+
+For the direct mapped cache, we need to know three things:
+
+\begin{itemize}
+    \item Required cache lines bit length: $\log_2(128)$ = 7 bits
+    \item Required word offset bit length: $\log_2(256)$ = 8 bits
+\end{itemize}
+
+\subsection{Part B: Associative Mapped}
+
+\subsection{Part C: Set Associative with four-line per sets}
+
+\section{Question 2:}
+
+TODO :D
+
+\end{document}
