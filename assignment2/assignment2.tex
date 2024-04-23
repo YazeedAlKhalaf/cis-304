@@ -36,6 +36,12 @@ words each. Design the address format if the cache is
     \item Set Associative with four-line per sets
 \end{enumerate}
 
+\subsection{Shared:}
+
+\begin{itemize}
+    \item One memory address bit length: $\log_2(8192*256)$ = $\log_2(2097152)$ = 21 bits
+\end{itemize}
+
 \subsection{Part A: Direct Mapped}
 
 For the direct mapped cache, we need to know three things:
@@ -43,7 +49,10 @@ For the direct mapped cache, we need to know three things:
 \begin{itemize}
     \item Required cache lines bit length: $\log_2(128)$ = 7 bits
     \item Required word offset bit length: $\log_2(256)$ = 8 bits
+    \item Required tag bit length: $21 - 7 - 8 = 6$ bits
 \end{itemize}
+
+The design is: 6 Tag Bits | 7 Line Bits | 8 Word Offset Bits
 
 \subsection{Part B: Associative Mapped}
 
