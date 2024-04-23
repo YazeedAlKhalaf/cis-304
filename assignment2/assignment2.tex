@@ -1,10 +1,26 @@
 \documentclass[a4paper]{article}
 \usepackage{graphicx}
+\usepackage{float} % Required for the [H] placement option
 \usepackage{xcolor} % Load this before hyperref
 \definecolor{softblue}{RGB}{70,130,180}
 \usepackage[colorlinks=true, linkcolor=softblue, citecolor=softblue, filecolor=softblue, urlcolor=softblue]{hyperref}
 \usepackage{enumitem}
+\usepackage{listings}
 
+% Define a style for 6502 assembly code
+\lstdefinestyle{6502asm}{
+    language=[Motorola68k]Assembler,
+    basicstyle=\ttfamily,
+    commentstyle=\color{green!40!black},
+    keywordstyle=\color{blue},
+    morekeywords={lda, sta, add, sub, jmp, jsr, rts},
+    numbers=left,
+    numberstyle=\tiny,
+    stepnumber=1,
+    frame=single,
+    columns=fullflexible,
+    showstringspaces=false
+}
 
 \title{\textbf{Assignment 2:\\Computer Architecture}}
 \author{
@@ -85,6 +101,8 @@ Taking all of that in mind, we can get the following values:
 
 The design is: \textbf{8 Tag Bits | 5 Cache Set Bits | 8 Word Offset Bits}
 
+\newpage
+
 \section{Question 2:}
 
 \subsection{Introduction}
@@ -96,6 +114,116 @@ THe goal of learning 6502 assembly language is purely academic, since we won't u
 With that in mind, we can start the journey of exploring 6502 assembly language!
 
 \subsection{Our first program}
+
+The first program is a program that colors the first three pixels of the screen using obviously, 6502 assembly.
+
+The code for this program is:
+
+\begin{lstlisting}[style=6502asm]
+LDA #$01
+STA $0200
+
+LDA #$05
+STA $0201
+
+LDA #$08
+STA $0202
+\end{lstlisting}
+
+The state of the simulator after assembling the code, but before running it is shown in \textbf{Figure \ref{fig:01-initial-state}} below. Notice the where the $PC$ register's value, it is $\$0600$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/01-initial-state.png}
+    \caption{Initial state of the 6502 simulator with first program code}
+    \label{fig:01-initial-state}
+\end{figure}
+
+Now let us see what happened when I ran the code. The result is shown in \textbf{Figure \ref{fig:02-after-running-state}} below. After the simulator is don executing we can see the changes that happened to the $PC$ register. Of course other registers changed, but we will see them later when we try the debugging functionality.
+
+Also the black screen on the top right corner of \textbf{Figure \ref{fig:02-after-running-state}} shows three pixels colored, and that is what the first program instructed the 6502 simulator to do.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/02-after-running-state.png}
+    \caption{Result of running the first program in the 6502 simulator}
+    \label{fig:02-after-running-state}
+\end{figure}
+
+Next we will be exploring the debugger functionality in this 6502 simulator. The debugger allows us to step through each CPU cycle manually to allow for debugging, hence the name "debugger". You can use use the debugger by checking the debugger option and then using the step button to step through the assembly code you wrote. You can notice the PC and any other registers you changed, and the memory places for the screen pixels change once you click the step button. I cliked it twice and see what happenned in \textbf{Figure \ref{fig:02-after-running-state}} below. Notice the values of the $A$, the accumulator and $PC$, the program counter, registers.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/03-debugger-first-step.png}
+    \caption{Result of running the first program with debugger in the 6502 simulator}
+    \label{fig:03-debugger-first-step}
+\end{figure}
+
+After this initial trial with the simulator, I will be doing the following exercises and sharing the results below:
+\begin{enumerate}
+    \item Try changing the colour of the three pixels.
+    \item Change one of the pixels to draw at the bottom-right corner (memory location \$05ff).
+    \item Add more instructions to draw extra pixels.
+\end{enumerate}
+
+\subsubsection{Exercise 1}
+
+I will be editing the code to change the colors, so now the pixels will be showing the following colors in order from left to right: orange, light green, and light blue.
+
+\begin{lstlisting}[style=6502asm]
+LDA #$08
+STA $0200
+
+LDA #$0d
+STA $0201
+
+LDA #$0e
+STA $0202
+\end{lstlisting}
+
+After the running the code above, the result I got is shown in \textbf{Figure \ref{fig:04-exercise-1}}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/04-exercise-1.png}
+    \caption{Result of running the first excercise in the 6502 simulator}
+    \label{fig:04-exercise-1}
+\end{figure}
+
+\subsubsection{Exercise 2}
+
+I will be editing the code from excercise 1 to make the green pixel that was in the middle of the three pixels we rendered before render at the bottom right of the screen. The memory address for that last pixel in the bottom right of the screen is $\$05ff$
+
+\begin{lstlisting}[style=6502asm]
+LDA #$08
+STA $0200
+
+LDA #$0d
+STA $05ff
+
+LDA #$0e
+STA $0202
+\end{lstlisting}
+
+After the running the code above, the result I got is shown in \textbf{Figure \ref{fig:05-exercise-2}}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/05-exercise-2.png}
+    \caption{Result of running the second excercise in the 6502 simulator}
+    \label{fig:05-exercise-2}
+\end{figure}
+
+\subsubsection{Exercise 3}
+
+After the first two exercises, I will be playing more with the pixels and changing the colors. I added pixels in the middle of the screen horizontally spaced equally. The color is both light red and white. The result is shown in  \textbf{Figure \ref{fig:06-exercise-3}}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/06-exercise-3.png}
+    \caption{Result of running the third excercise in the 6502 simulator}
+    \label{fig:06-exercise-3}
+\end{figure}
 
 \subsection{Registers and flags}
 
