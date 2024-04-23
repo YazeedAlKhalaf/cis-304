@@ -36,10 +36,13 @@ words each. Design the address format if the cache is
     \item Set Associative with four-line per sets
 \end{enumerate}
 
-\subsection{Shared:}
+\subsection{Shared Information:}
 
 \begin{itemize}
-    \item One memory address bit length: $\log_2(8192*256)$ = $\log_2(2097152)$ = 21 bits
+    \item $cacheLines$ = 128 cache line
+    \item $blocks$ = 8192 block
+    \item $words$ = 256 word
+    \item One memory address bit length: $\log_2(blocks * words)$ = $\log_2(8192*256)$ = $\log_2(2097152)$ = 21 bits
 \end{itemize}
 
 \subsection{Part A: Direct Mapped}
@@ -47,16 +50,40 @@ words each. Design the address format if the cache is
 For the direct mapped cache, we need to know three things:
 
 \begin{itemize}
-    \item Required cache lines bit length: $\log_2(128)$ = 7 bits
-    \item Required word offset bit length: $\log_2(256)$ = 8 bits
-    \item Required tag bit length: $21 - 7 - 8 = 6$ bits
+    \item Required cache lines bit length: $\log_2(cacheLines)$ = $\log_2(128)$ = 7 bits
+    \item Required word offset bit length: $\log_2(words)$ = $\log_2(256)$ = 8 bits
+    \item Required tag bit length is the remaining bits length: $21 - 7 - 8$ = 6 bits
 \end{itemize}
 
-The design is: 6 Tag Bits | 7 Line Bits | 8 Word Offset Bits
+The design is: \textbf{6 Tag Bits | 7 Cache Line Bits | 8 Word Offset Bits}
 
 \subsection{Part B: Associative Mapped}
 
+Associative mapped cache means the cache can store any block in any line. Therefore, we only need to know the word offset bit length:
+
+\begin{itemize}
+    \item Required word offset bit length: $\log_2(256)$ = 8 bits
+    \item Required tag bit length is the remaining bits length: $21 - 8$ = 13 bits
+\end{itemize}
+
+The design is: \textbf{13 Tag Bits | 8 Word Offset Bits}
+
 \subsection{Part C: Set Associative with four-line per sets}
+
+Set associative means that the cache lines are split into sets, and each set has some lines, in our case 4 lines, and those are associative which means 4 blocks can exist at the same set.
+
+And here since our lines are split into sets of four, we need to get the number of sets to be able to calculate the "cache set" bit length. To calculate the number of sets, we do the following: ($cacheLines \div 4$). The $4$ here is inferred from the "four-line per set" part.
+
+Taking all of that in mind, we can get the following values:
+
+\begin{itemize}
+    \item Number of cache sets: $128 \div 4$ = 32 cache sets
+    \item Required "cache sets" bit length: $\log_2(32)$ = 5 bits
+    \item Required word offset bit length: $\log_2(256)$ = 8 bits
+    \item Required tag bit length is the remaining bits length: $21 - 5 - 8$ = 8 bits
+\end{itemize}
+
+The design is: \textbf{8 Tag Bits | 5 Cache Set Bits | 8 Word Offset Bits}
 
 \section{Question 2:}
 
