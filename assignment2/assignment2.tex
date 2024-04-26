@@ -13,7 +13,7 @@
     basicstyle=\ttfamily,
     commentstyle=\color{green!40!black},
     keywordstyle=\color{blue},
-    morekeywords={lda, sta, add, sub, jmp, jsr, rts},
+    morekeywords={lda, sta, add, sub, jmp, jsr, rts, ldx, stx, tax, inx, adc, brk},
     numbers=left,
     numberstyle=\tiny,
     stepnumber=1,
@@ -216,7 +216,30 @@ After the running the code above, the result I got is shown in \textbf{Figure \r
 
 \subsubsection{Exercise 3}
 
-After the first two exercises, I will be playing more with the pixels and changing the colors. I added pixels in the middle of the screen horizontally spaced equally. The color is both light red and white. The result is shown in  \textbf{Figure \ref{fig:06-exercise-3}}.
+After the first two exercises, I will be playing more with the pixels and changing the colors. I added pixels in the middle of the screen horizontally spaced equally. The color is both light red and white.
+
+\begin{lstlisting}[style=6502asm]
+LDA #$08
+STA $0200
+
+LDA #$0d
+STA $05ff
+
+LDA #$0e
+STA $0202
+
+LDA #$0a
+STA $0400
+STA $0409
+
+LDX #$01
+STX $0410 
+
+STA $0417
+STA $041f
+\end{lstlisting}
+
+The result is shown in  \textbf{Figure \ref{fig:06-exercise-3}}.
 
 \begin{figure}[H]
     \centering
@@ -227,6 +250,227 @@ After the first two exercises, I will be playing more with the pixels and changi
 
 \subsection{Registers and flags}
 
+Here we learn about the registers and the flags of the CPU. Those can be seen in the simulator in the "processor status" section, shown in  \textbf{Figure \ref{fig:07-register-and-flags}}. The registers this 6502 simulator has are:
+
+\begin{itemize}
+    \item $A$ register: the accumulator, holds a single byte.
+    \item $X$ register: a generic register, holds a single byte.
+    \item $Y$ register: another generic register, holds a single byte.
+    \item $SP$ register: stack pointer, basically this register is decremented every time a byte is pushed onto the stack, and decremented when a byte is popped off the stack.
+    \item $PC$ register: program counter, tells the CPU where the program is currently at in the memory, it is incremented every CPU cycle unless some $JMP$ happens or something that interrupts the CPU.
+\end{itemize}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{res/images/q2/07-register-and-flags.png}
+    \caption{Processor status section in the 6502 simulator}
+    \label{fig:07-register-and-flags}
+\end{figure}
+
+Enough about the top section of the processor status section, let us talk about the bottom section that contains the processor flags. Each flag is one bit, so the seven flags we have can be represented as one byte. The flags are set byt the processor to give information about the previous instruction.
+
 \subsection{Instructions}
+
+Instructions in the 6502 assembly language are 56, we will be exploring some of them.
+
+\subsubsection{First Program}
+
+The first piece of code we have is the following:
+
+\begin{lstlisting}[style=6502asm]
+LDA #$c0  ;Load the hex value $c0 into the A register
+TAX       ;Transfer the value in the A register to X
+INX       ;Increment the value in the X register
+ADC #$c4  ;Add the hex value $c4 to the A register
+BRK       ;Break - we're done
+\end{lstlisting}
+
+Now let us use the debugger to step through this code above. \textbf{Figure \ref{fig:08-instructions-first-initial}} shows the initial state of the simulator.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/08-instructions-first-initial.png}
+    \caption{Initial state of first program in instructions in the 6502 simulator}
+    \label{fig:08-instructions-first-initial}
+\end{figure}
+
+We then step 4 times, let us view them below in order. The figures in order are: \textbf{Figure \ref{fig:09-instructions-first-step1}}, \textbf{Figure \ref{fig:10-instructions-first-step2}}, \textbf{Figure \ref{fig:11-instructions-first-step3}}, and \textbf{Figure \ref{fig:12-instructions-first-step4}}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/09-instructions-first-step1.png}
+    \caption{First step of first program in instructions in the 6502 simulator}
+    \label{fig:09-instructions-first-step1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/10-instructions-first-step2.png}
+    \caption{Second step of first program in instructions in the 6502 simulator}
+    \label{fig:10-instructions-first-step2}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/11-instructions-first-step3.png}
+    \caption{Third step of first program in instructions in the 6502 simulator}
+    \label{fig:11-instructions-first-step3}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/12-instructions-first-step4.png}
+    \caption{Fourth step of first program in instructions in the 6502 simulator}
+    \label{fig:12-instructions-first-step4}
+\end{figure}
+
+In the last step, \textbf{Figure \ref{fig:12-instructions-first-step4}}, you might expect that adding $\$c4$ to register $A$ will yield the result $\$184$ but we are getting $\$84$. That is because the maximum number the register can handle is one byte, and $\$184$ is bigger than $\$FF$. And we can also notice that the processor carry flag was set to $1$, and that's how we know that there is something weird. The carry flag is the last bit in the $NV-DBIZC$, hence the $C$.
+
+\subsubsection{Second Program}
+
+The second piece of code in this section is the following:
+
+\begin{lstlisting}[style=6502asm]
+LDA #$80
+STA $01
+ADC $01
+\end{lstlisting}
+
+Notice an important thing regarding the $ADC$ opcode, in the first example there was a $\#$ but now there is no $\#$. When we have a leading $\#$, the assembler will regards it as a number. But when it is directly stated like $\$01$, it replaces it with the value stored at that memory location.
+
+Before running this code, we will tick the monitor checkbox so we can see the memory visually:
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/13-instructions-second-initial.png}
+    \caption{Initial state of second program in instructions in the 6502 simulator}
+    \label{fig:13-instructions-second-initial}
+\end{figure}
+
+Now we will be stepping through the code, three steps since they are three lines. Let us look at what happens to the memory in \textbf{Figure \ref{fig:15-instructions-second-step2}}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/14-instructions-second-step1.png}
+    \caption{Step 1 of second program in instructions in the 6502 simulator}
+    \label{fig:14-instructions-second-step1}
+\end{figure}
+
+In \textbf{Figure \ref{fig:14-instructions-second-step1}}, the number 80 is loaded into register $A$. Notice how the memory is made up of ZEROs, that means it is empty for now.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/15-instructions-second-step2.png}
+    \caption{Step 2 of second program in instructions in the 6502 simulator}
+    \label{fig:15-instructions-second-step2}
+\end{figure}
+
+After that in \textbf{Figure \ref{fig:15-instructions-second-step2}}, the value held in register $A$, aka the accumulator, is saved at the memory location $\$01$. You can notice it in the monitor in the first line.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/16-instructions-second-step3.png}
+    \caption{Step 3 of second program in instructions in the 6502 simulator}
+    \label{fig:16-instructions-second-step3}
+\end{figure}
+
+Finally, in \textbf{Figure \ref{fig:16-instructions-second-step3}}, the $ADC$ opcode means "ADd with Carry". And this is adding the the value at $\$01$ to the accumulator. Since $\$80 + \$80 = \$100$, the accumulator should hold $\$100$ but it doesn't because the value is bigger than a byte. Taking that into account, we can notice the things that changed in \textbf{Figure \ref{fig:16-instructions-second-step3}}. When this happens, the result is that the $A$ register is set to $\$00$ and the carry flag is set. The carry flag is the last flag in the flags byte. Another flag that has been set is the zero flag, since the result is zero.
+
+
+After learning more about instructions, I will be doing the following exercises and sharing the results below:
+\begin{enumerate}
+    \item You've seen TAX. You can probably guess what TAY, TXA and TYA do, but write some code to test your assumptions.
+    \item Rewrite the first example in this section to use the Y register instead of the X register.
+    \item The opposite of ADC is SBC (subtract with carry). Write a program that uses this instruction.
+\end{enumerate}
+
+\subsubsection{Excercise 1}
+
+I guess the meanings of the opecodes in the excercise before we start:
+
+\begin{itemize}
+    \item $TAY$: means move the value of $A$ to $Y$
+    \item $TXA$: means move the value of $X$ to $A$
+    \item $TYA$: means move the value of $Y$ to $A$
+\end{itemize}
+
+Here is a three pieces of code to test each one them, and I will be using the debugger to show its effect step by step.
+
+\begin{lstlisting}[style=6502asm]
+LDA #$05
+TAY
+\end{lstlisting}
+
+The result of running the code to test $TAY$ is shown in \textbf{Figure \ref{fig:17-ex1-1-step1}} and in \textbf{Figure \ref{fig:18-ex1-1-step2}}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/17-ex1-1-step1.png}
+    \caption{Step 1 of first excercise program related to $TAY$ in instructions in the 6502 simulator}
+    \label{fig:17-ex1-1-step1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/18-ex1-1-step2.png}
+    \caption{Step 2 of first excercise program related to $TAY$ in instructions in the 6502 simulator}
+    \label{fig:18-ex1-1-step2}
+\end{figure}
+
+Notice how the value of register $A$ is set in the first step in \textbf{Figure \ref{fig:17-ex1-1-step1}} and then is copied to the $Y$ register which is shown in \textbf{Figure \ref{fig:18-ex1-1-step2}}.
+
+The two next examples will be just the steps since they can be inferred easily based on the $TAY$ explanation.
+
+\textbf{Figure \ref{fig:19-ex1-2-step1}} and \textbf{Figure \ref{fig:20-ex1-2-step2}} show the debugger exection of $TXA$, and the code is below:
+
+
+\begin{lstlisting}[style=6502asm]
+LDA #$05
+TAY
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/19-ex1-2-step1.png}
+    \caption{Step 1 of first excercise program related to $TXA$ in instructions in the 6502 simulator}
+    \label{fig:19-ex1-2-step1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/19-ex1-2-step1.png}
+    \caption{Step 2 of first excercise program related to $TXA$ in instructions in the 6502 simulator}
+    \label{fig:20-ex1-2-step2}
+\end{figure}
+
+\textbf{Figure \ref{fig:21-ex1-3-step1}} and \textbf{Figure \ref{fig:22-ex1-3-step2}} show the debugger exection of $TYA$, and the code is below:
+
+
+\begin{lstlisting}[style=6502asm]
+LDA #$05
+TAY
+\end{lstlisting}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/21-ex1-3-step1.png}
+    \caption{Step 1 of first excercise program related to $TYA$ in instructions in the 6502 simulator}
+    \label{fig:21-ex1-3-step1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/19-ex1-2-step1.png}
+    \caption{Step 2 of first excercise program related to $TYA$ in instructions in the 6502 simulator}
+    \label{fig:22-ex1-3-step2}
+\end{figure}
+
+\subsubsection{Excercise 2}
+
+
+
+\subsubsection{Excercise 3}
+
+
 
 \end{document}
