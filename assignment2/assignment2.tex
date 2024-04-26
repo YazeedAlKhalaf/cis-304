@@ -438,7 +438,7 @@ TAY
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1.0\textwidth]{res/images/q2/19-ex1-2-step1.png}
+    \includegraphics[width=1.0\textwidth]{res/images/q2/20-ex1-2-step2.png}
     \caption{Step 2 of first excercise program related to $TXA$ in instructions in the 6502 simulator}
     \label{fig:20-ex1-2-step2}
 \end{figure}
@@ -460,17 +460,48 @@ TAY
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1.0\textwidth]{res/images/q2/19-ex1-2-step1.png}
+    \includegraphics[width=1.0\textwidth]{res/images/q2/22-ex1-3-step2.png}
     \caption{Step 2 of first excercise program related to $TYA$ in instructions in the 6502 simulator}
     \label{fig:22-ex1-3-step2}
 \end{figure}
 
 \subsubsection{Excercise 2}
 
+Here we will rewrite the first program in instructions section to use the $Y$ register instead of the $X$ register. Below is the new code:
 
+\begin{lstlisting}[style=6502asm]
+LDA #$c0  ;Load the hex value $c0 into the A register
+TAY       ;Transfer the value in the A register to Y
+INY       ;Increment the value in the Y register
+ADC #$c4  ;Add the hex value $c4 to the A register
+BRK       ;Break - we're done
+\end{lstlisting}
+
+And in \textbf{Figure \ref{fig:23-ex2}} we can see the result of running this code.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/23-ex2.png}
+    \caption{The first program but using the $Y$ istead of $X$ register in instructions in the 6502 simulator}
+    \label{fig:23-ex2}
+\end{figure}
 
 \subsubsection{Excercise 3}
 
+The code below uses $SBC$, which is (SuBtract with Carry):
 
+\begin{lstlisting}[style=6502asm]
+LDA #$ff
+SBC #$0a
+\end{lstlisting}
+
+Let us step through the code using the debugger. \textbf{Figure \ref{fig:24-ex3-step1}} shows the value $\$ff$ loaded into register $A$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.0\textwidth]{res/images/q2/24-ex3-step1.png}
+    \caption{The use of $SBC$ opcode in instructions in the 6502 simulator}
+    \label{fig:24-ex3-step1}
+\end{figure}
 
 \end{document}
